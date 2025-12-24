@@ -19,3 +19,8 @@ Voice-first AI assistant for practicing spoken English.
 ## Status
 
 MVP in progress
+
+## Backend API
+
+Chat API documentation:
+👉 https://github.com/OlgaBieliaieva/ai-voice-english-tutor-backend/blob/main/docs/chat-api.md
