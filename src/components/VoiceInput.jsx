@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSpeechToText } from "../hooks/useSpeechToText";
 import { sendChatMessage } from "../api/chatApi";
+import TTSPlayer from "./TTSPlayer";
 
 export default function VoiceInput() {
   const {
@@ -62,9 +63,12 @@ export default function VoiceInput() {
       </button>
 
       {reply && (
-        <div style={{ marginTop: "1rem" }}>
-          <strong>AI:</strong> {reply}
-        </div>
+        <>
+          <div style={{ marginTop: "1rem" }}>
+            <strong>AI:</strong> {reply}
+          </div>
+          <TTSPlayer text={reply} />
+        </>
       )}
     </div>
   );
