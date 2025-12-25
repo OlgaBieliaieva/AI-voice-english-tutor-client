@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSpeechToText } from "../hooks/useSpeechToText";
 import { sendChatMessage } from "../api/chatApi";
+import { parseLLMResponse } from "../utils/parseLLMResponse";
 import TTSPlayer from "./TTSPlayer";
 
 export default function VoiceInput() {
@@ -15,6 +16,7 @@ export default function VoiceInput() {
 
   const [loading, setLoading] = useState(false);
   const [reply, setReply] = useState(null);
+  const [feedback, setFeedback] = useState(null);
 
   const handleSend = async () => {
     if (!transcript.trim()) return;
@@ -24,7 +26,10 @@ export default function VoiceInput() {
 
       const response = await sendChatMessage(transcript);
 
-      setReply(response.reply);
+      const parsed = parseLLMResponse(response.reply);
+
+      setReply(parsed.reply);
+      setFeedback(parsed.feedback);
       setTranscript("");
     } catch (err) {
       console.error("[CHAT ERROR]", err);
@@ -63,12 +68,27 @@ export default function VoiceInput() {
       </button>
 
       {reply && (
-        <>
-          <div style={{ marginTop: "1rem" }}>
-            <strong>AI:</strong> {reply}
-          </div>
+        <div style={{ marginTop: "1rem" }}>
+          <strong>AI:</strong>
+          <p>{reply}</p>
           <TTSPlayer text={reply} />
-        </>
+        </div>
+      )}
+
+      {feedback && (
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem",
+            borderLeft: "4px solid #4caf50",
+            backgroundColor: "#f6fff7",
+          }}
+        >
+          <strong>Grammar feedback:</strong>
+          <pre style={{ whiteSpace: "pre-wrap", marginTop: "0.5rem" }}>
+            {feedback}
+          </pre>
+        </div>
       )}
     </div>
   );
